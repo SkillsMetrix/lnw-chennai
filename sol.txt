@@ -1,0 +1,87 @@
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-rfdemo',
+  templateUrl: './rfdemo.component.html',
+  styleUrls: ['./rfdemo.component.css']
+})
+export class RfdemoComponent {
+  myForm: FormGroup
+  uname: FormControl
+  pass: FormControl
+  email: FormControl
+  city: FormControl
+
+  createFormControl() {
+    this.uname = new FormControl('', Validators.required)
+    this.pass = new FormControl('')
+    this.email = new FormControl('', [Validators.required, Validators.email,this.emailDomainValidator])
+    this.city = new FormControl('')
+  }
+  createForm() {
+    this.myForm = new FormGroup({
+      uname: this.uname,
+      pass: this.pass,
+      email: this.email,
+      city: this.city
+    })
+  }
+  constructor() {
+    this.createFormControl()
+    this.createForm()
+  }
+  addUser() {
+    console.log(this.myForm.value);
+
+  }
+  emailDomainValidator(control: FormControl) {
+
+    let email = control.value
+    if (email && email.indexOf('@') != -1) {
+      let [before, domain] = email.split('@')
+      if (domain !== 'lnw.com') {
+        return {
+          emailDomain: {
+            parseDomain: domain
+          }
+        }
+      }
+    }
+    return null
+
+  }
+}
+------
+
+
+<div class="card text-center">
+    <div class="card-header">
+        User Registration Form
+    </div>
+    <div class="card-body">
+        <form (ngSubmit)="addUser( )" [formGroup]="myForm">
+            UserName:<input type="text" formControlName="uname" />
+
+            <div *ngIf="uname.invalid">Uname can not be blank</div>
+
+            Password:<input type="password" formControlName="pass" />
+            Email:<input type="email" name="email" formControlName="email" />
+
+            <div *ngIf="email.invalid &&(email.dirty || email.touched)">
+                <div *ngIf="email.errors?.['required']">Email cant be blank</div>
+                <div *ngIf="email.errors?.['email']">Email must be formatted</div>
+                <div *ngIf="email.errors?.['emailDomain']">Email must be 'LNW.com'</div>
+            
+            
+            </div>
+
+
+            City:<input type="text" formControlName="city" />&nbsp;
+            <button class="btn btn-primary">Register</button>
+        </form>
+    </div>
+    <div class="card-footer text-body-secondary">
+        All Rights Reserved
+    </div>
+</div>
