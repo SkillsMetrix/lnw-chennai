@@ -1,5 +1,30 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+
+
+@Injectable()
+export class FormService{
+constructor(private http:HttpClient){
+
+}
+    addUserToDB(userdata:any){
+       this.http.post('https://lnw-angular-default-rtdb.firebaseio.com/users.json',userdata)
+       .subscribe((data)=>{
+        console.log(data);
+        
+       }) }
+       getUsersFromDB(){
+       return this.http.get('https://lnw-angular-default-rtdb.firebaseio.com/users.json')
+         
+       }
+}
+
+
+-----------
+
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormService } from '../shared/fs/FormService.service';
 
 @Component({
   selector: 'app-rfdemo',
@@ -7,77 +32,101 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./rfdemo.component.css']
 })
 export class RfdemoComponent {
-  myForm:FormGroup
-  uname:FormControl
-  pass:FormControl
-  email:FormControl
-  city:FormControl
-  createFormControl(){
-    this.uname= new FormControl('',Validators.required),
-    this.pass= new FormControl(''),
-    this.email= new FormControl('',[Validators.required,this.emailDomainValidator]),
-    this.city= new FormControl('')
-  }
-  creteForm(){
-    this.myForm=new FormGroup({
-      uname:this.uname,
-      pass:this.pass,
-      email:this.email,
-      city:this.city
+  myForm: FormGroup
+  uname: FormControl
+  pass: FormControl
+  email: FormControl
+  city: FormControl
 
+  createFormControl() {
+    this.uname = new FormControl('', Validators.required)
+    this.pass = new FormControl('')
+    this.email = new FormControl('', [Validators.required, Validators.email, this.emailDomainValidator])
+    this.city = new FormControl('')
+  }
+  createForm() {
+    this.myForm = new FormGroup({
+      uname: this.uname,
+      pass: this.pass,
+      email: this.email,
+      city: this.city
     })
   }
-constructor(){
-  this.createFormControl()
-  this.creteForm()
-}
-addUser(){
-console.log(this.myForm.value);
+  constructor(private fs: FormService) {
+    this.createFormControl()
+    this.createForm()
+  }
+  addUser() {
+    this.fs.addUserToDB(this.myForm.value)
 
-}
-emailDomainValidator(control:FormControl){
-  let email= control.value
-  if(email && email.indexOf('@') != -1){
-    let [before,domain]= email.split('@')
-    if(domain !== 'lnw.com'){
-      return {
-        emailDomain:{
-          errorMessage:domain
+  }
+  emailDomainValidator(control: FormControl) {
+
+    let email = control.value
+    if (email && email.indexOf('@') != -1) {
+      let [before, domain] = email.split('@')
+      if (domain !== 'lnw.com') {
+        return {
+          emailDomain: {
+            parseDomain: domain
+          }
         }
       }
     }
+    return null
+
   }
-  return null
-}
+  users: any[] = []
+  loadUser() {
+    const userData = []
+    this.fs.getUsersFromDB()
+      .subscribe((res) => {
+        for (let key in res) {
+          userData.push(res[key])
+        }
+        this.users = userData
+      })
+  }
 }
 
-----------
+
+
+---------
+
 
 <div class="card text-center">
     <div class="card-header">
         User Registration Form
     </div>
     <div class="card-body">
-        <form (ngSubmit)="addUser()" [formGroup]="myForm">
-            UserName:<input type="text"  formControlName="uname"/>
-            <div *ngIf="uname.invalid">
-                <p>Uname cant be blank</p>
-            </div>
+        <form (ngSubmit)="addUser( )" [formGroup]="myForm">
+            UserName:<input type="text" formControlName="uname" />
 
-            Password:<input type="password" formControlName="pass"/>
+            <div *ngIf="uname.invalid">Uname can not be blank</div>
 
-            Email:<input type="email" formControlName="email" />
+            Password:<input type="password" formControlName="pass" />
+            Email:<input type="email" name="email" formControlName="email" />
+
             <div *ngIf="email.invalid &&(email.dirty || email.touched)">
-                <div *ngIf=" email.errors?.['required']">Email cant be blank</div>
-                <div *ngIf=" email.errors?.['emailDomain']">Email must be 'LNW.com'</div>
+                <div *ngIf="email.errors?.['required']">Email cant be blank</div>
+                <div *ngIf="email.errors?.['email']">Email must be formatted</div>
+                <div *ngIf="email.errors?.['emailDomain']">Email must be 'LNW.com'</div>
+            
+            
             </div>
+
 
             City:<input type="text" formControlName="city" />&nbsp;
             <button class="btn btn-primary">Register</button>
-
         </form>
     </div>
     <div class="card-footer text-body-secondary">
-        All Rights Reserved
+       <button (click)="loadUser()">Load Users</button>
+       <hr>
+       <ul>
+        <li *ngFor="let user of users">
+            {{user.uname}} -- {{user.email}}
+        </li>
+       </ul>
     </div>
 </div>
