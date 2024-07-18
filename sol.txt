@@ -1,46 +1,24 @@
-import {Pipe, PipeTransform} from '@angular/core';
- 
-@pipe({
-    name: 'tempConverter'
-})
-export class TempConverterPipe implements PipeTransform {
-    transform(value: number, unit: string) {
-        if(value && !isNaN(value)) {
-            if (unit === 'C') {
-                var temperature = (value - 32) /1.8 ;
-                return temperature.toFixed(2);
-            } else if (unit === 'F'){
-                var temperature = (value * 1.8 ) + 32
-                return temperature.toFixed(2);
-            }
-        }
-        return;
-    }
-}
+<div class="container">
 
------
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">UserDetails</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Portfolio</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
 
-<div class='card'>
-  <div class='card-header'>
-    <p>{{title}} </p>
-  </div>
-  <div class="card-body">
- 
-    <div class="row">
-      <h3>Fahrenheit to Celsius </h3>
+        </div>
     </div>
-    <div class="row">
-      <p> Fahrenheit : <input type="text" [(ngModel)]="Fahrenheit" /> 
-      Celsius : {{Fahrenheit | tempConverter:'C'}} </p>
-    </div>
- 
-    <div class="row">
-      <h3>Celsius to Fahrenheit </h3>
-    </div>
-    <div class="row">
-      <p> celsius : <input type="text" [(ngModel)]="celcius" /> 
-       Fahrenheit : {{celcius | tempConverter:'F'}} </p>
-    </div>
-  </div>
 </div>
- 
