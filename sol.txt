@@ -1,18 +1,32 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { SummaryPipe } from './shared/pipes/summary.pipe';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
-@NgModule({
-    declarations: [
-
-        SummaryPipe
-    ],
-    exports: [SummaryPipe],
-    // modules
-    imports: [
-        BrowserModule,
-
-    ],
-
+@Component({
+  selector: 'app-userform',
+  templateUrl: './userform.component.html',
+  styleUrl: './userform.component.css'
 })
-export class ChildModule { }
+export class UserformComponent {
+
+  myForm: FormGroup
+  uname: FormControl
+  password: FormControl
+  email: FormControl
+
+  createFormControl() {
+    this.uname = new FormControl('')
+    this.password = new FormControl('')
+    this.email = new FormControl('')
+  }
+  createForm() {
+    this.myForm = new FormGroup({
+      uname: this.uname,
+      password: this.password,
+      email: this.email
+    })
+  }
+  constructor() {
+    this.createFormControl()
+    this.createForm()
+  }
+}
