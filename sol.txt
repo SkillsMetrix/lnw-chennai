@@ -1,12 +1,18 @@
-import { Pipe, PipeTransform } from "@angular/core";
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { SummaryPipe } from './shared/pipes/summary.pipe';
 
+@NgModule({
+    declarations: [
 
-@Pipe({
-    name: 'summary'
+        SummaryPipe
+    ],
+    exports: [SummaryPipe],
+    // modules
+    imports: [
+        BrowserModule,
+
+    ],
+
 })
-
-export class SummaryPipe implements PipeTransform {
-    transform(data: string) {
-        return data.substring(0, 10)
-    }
-}
+export class ChildModule { }
