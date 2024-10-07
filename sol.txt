@@ -1,3 +1,16 @@
+
+<p>Data Driven Form</p>
+
+<form (ngSubmit)="addUser()" [formGroup]="myForm">
+    UserName:<input type="text" formControlName="uname"/>
+    Password:<input type="password" formControlName="password"/>
+    Email: <input type="email" formControlName="email"/>
+    <button>Register</button>
+</form>
+
+-----------
+
+
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -28,5 +41,9 @@ export class UserformComponent {
   constructor() {
     this.createFormControl()
     this.createForm()
+  }
+  addUser(){
+    console.log(this.myForm.value);
+    
   }
 }
