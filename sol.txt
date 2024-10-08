@@ -92,3 +92,40 @@ function mockMovies(): Movie[] {
     const movies = [movie, movie1, movie2];
     return movies;
   }
+
+
+-------------
+
+import { Component, Input, OnInit } from '@angular/core';
+import { Movie } from '../Models/movie';
+import { DataService } from '../Service/data.service';
+import { Store } from '@ngrx/store'
+import { MovieState } from '../Store/Reducers/movie.reducer';
+
+@Component({
+  selector: 'app-movie-list',
+  templateUrl: './movie-list.component.html',
+  styleUrls: ['./movie-list.component.css'],
+})
+export class MovieListComponent implements OnInit {
+  @Input()
+  movies: Movie[] = [];
+  movies$= this.store.select('movies')
+  constructor(private dataService: DataService,private store: Store<MovieState>) {}
+
+  ngOnInit(): void {}
+}
+
+
+-----------------
+
+<div class="movies">
+    <section *ngFor="let movie of movies$ | async">
+        <mat-card>
+            <h1> {{movie.name}} </h1>
+            <h2> {{ movie.releaseDate | date }} </h2>
+            <h3> ${{ movie.earning }} million </h3>
+        </mat-card>
+    </section>
+</div>
+
