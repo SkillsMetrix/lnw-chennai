@@ -1,18 +1,21 @@
-import { Directive, ElementRef, OnInit, Renderer2 } from "@angular/core";
-import { elementAt } from "rxjs";
+<div class="container">
+    <ul class="nav">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="login">Login</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="portfolio">Portfolio</a>
+        </li>
 
-@Directive({
-    selector: '[appBold]',
-    standalone:true
-})
-export class FontWtDirective implements OnInit {
-    private weight = 'bold'
-    constructor(private ef: ElementRef, private ren: Renderer2) {
+    </ul>
+</div>
 
-    }
-    ngOnInit(): void {
-        this.ren.setStyle(
-            this.ef.nativeElement, 'font-weight', this.weight
-        )
-    }
-}
+----
+
+
+<div class="container">
+<app-landingpage></app-landingpage>
+</div>
